@@ -4,6 +4,7 @@ This is a simple bash alternative for drush launcher.
 
 ## Important features of this fork
 Use of Bourne Shell
+Works with Drush 12.5.3
 
 ## Install
 
