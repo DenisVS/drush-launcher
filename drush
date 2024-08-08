@@ -1,7 +1,16 @@
 #!/bin/sh
 echo AA
 findDrush() {
-    local path=$(pwd)
+    local ARGUMENT="$1"
+    #echo ARGUMENT "$ARGUMENT"
+    if [ -z "$ARGUMENT" ]; then
+        local path=$(pwd)
+        echo path pwd $path
+    else
+        local path="$ARGUMENT"
+        #echo path ar $path
+    fi
+
     #echo path
     # Check if the vendor/bin/drush directory exists in the current directory
     drushDir="$path/vendor/bin/drush"
@@ -30,7 +39,7 @@ findDrush() {
     findDrush "$parentDir"
 }
 
-echo path to drush $(findDrush)
+#echo path to drush $(findDrush)
 #echo ddd
 #exit
 
@@ -38,38 +47,53 @@ echo path to drush $(findDrush)
 
 #args=("$@")
 args="$*"
-echo "Args: " $args
+#echo "Args: " $args
 
 COMMAND_ARGUMENTS="--root= --root -r= -r"
 for CURRENT_SUBSTRING in ${COMMAND_ARGUMENTS}; do
-    echo QWE $CURRENT_SUBSTRING
+    #echo QWE $CURRENT_SUBSTRING
     ROOT_HERE=0
     for CURRENT_LINE in ${args}; do
         if [ "$ROOT_HERE" = "1" ]; then
             ROOT_PATH=$CURRENT_LINE
             ROOT_HERE=0
         fi
-        echo string $CURRENT_LINE
+        #echo string $CURRENT_LINE
         #CURRENT_SUBSTRING="--root"
         if test "$CURRENT_LINE" != "${CURRENT_LINE%$CURRENT_SUBSTRING*}"; then
             ROOT_HERE=1
         fi
         DELIMETER='='
         if test "$CURRENT_LINE" != "${CURRENT_LINE%$DELIMETER*}"; then
-            echo $CURRENT_LINE AAAA
+            #echo $CURRENT_LINE AAAA
             ROOT_PATH=$(echo $CURRENT_LINE | awk -F \= '{print $2}')
-            echo $ROOT_PATH
+            #echo $ROOT_PATH
             break
         fi
     done
     if [ -n "$ROOT_PATH" ]; then
-        echo root path $ROOT_PATH
+        #echo root path $ROOT_PATH
         break
     fi
-
 done
+echo Root path $ROOT_PATH
+$(findDrush $ROOT_PATH) 
+exit
 
-#exit
 
+#a=`$findDrush ${ROOT_PATH}`
+#$findDrush /data/sites_php82/modular.dev
+#echo $a
+#adfdfd=$($findDrush)
+#echo $adfdfd  dd
 #echo GG $drushDir
-$(findDrush) $args
+#$(findDrush gf) $args
+#$(findDrush "/data/sites_php82/modular.dev") ggf  $args
+#findDrush /data/sites_php82/modular.dev
+#$findDrush /data/sites_php82/modular.dev/htdocs
+#exit
+#adfdfd=$($findDrush ${ROOT_PATH})
+
+#echo $adfdfd  dd
+#${adfdfd} $args
+#echo $?
