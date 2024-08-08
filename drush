@@ -1,7 +1,12 @@
 #!/bin/sh
-
 findDrush() {
-    local path="$1"
+    local ARGUMENT="$1"
+    if [ -z "$ARGUMENT" ]; then
+        local path=$(pwd)
+        echo path pwd $path
+    else
+        local path="$ARGUMENT"
+    fi
 
     # Check if the vendor/bin/drush directory exists in the current directory
     drushDir="$path/vendor/bin/drush"
@@ -30,21 +35,33 @@ findDrush() {
     findDrush "$parentDir"
 }
 
-args=("$@")
-while [[ $# -gt 0 ]]; do
-    case "$1" in
-        -r=*|--root=*)
-            drupalDir="${1#*=}"
-            shift 1
-            ;;
-        -r|--root)
-            drupalDir="$2"
-            shift 2
-            ;;
-        *)
-            shift
-            ;;
-    esac
+args="$*"
+
+COMMAND_ARGUMENTS="--root= --root -r= -r"
+for CURRENT_SUBSTRING in ${COMMAND_ARGUMENTS}; do
+    ROOT_HERE=0
+    for CURRENT_LINE in ${args}; do
+        if [ "$ROOT_HERE" = "1" ]; then
+            drupalDir=$CURRENT_LINE
+            ROOT_HERE=0
+        fi
+        #echo string $CURRENT_LINE
+        #CURRENT_SUBSTRING="--root"
+        if test "$CURRENT_LINE" != "${CURRENT_LINE%$CURRENT_SUBSTRING*}"; then
+            ROOT_HERE=1
+        fi
+        DELIMETER='='
+        if test "$CURRENT_LINE" != "${CURRENT_LINE%$DELIMETER*}"; then
+            #echo $CURRENT_LINE AAAA
+            drupalDir=$(echo $CURRENT_LINE | awk -F \= '{print $2}')
+            #echo $drupalDir
+            break
+        fi
+    done
+    if [ -n "$drupalDir" ]; then
+        #echo root path $drupalDir
+        break
+    fi
 done
 
 # If no dir provided, use the current directory
@@ -57,12 +74,6 @@ if [ -z "$drush" ]; then
     echo "Drush not found in $drupalDir."
     exit 1
 fi
-
-drushCmd=("$drush" "${args[@]}")
-
-# Pass the current environment variables to the drush command
-export "${!BASH_ENV[@]}" >/dev/null
-
-# Run the drush command
-"${drushCmd[@]}"
+echo "### Drush Launcher. Dir: $drupalDir ###"
+$(findDrush $drupalDir ) ${args}
 
