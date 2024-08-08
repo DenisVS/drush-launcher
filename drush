@@ -1,5 +1,5 @@
 #!/bin/sh
-echo AA
+echo "### Drush Launcher ###"
 findDrush() {
     local ARGUMENT="$1"
     #echo ARGUMENT "$ARGUMENT"
@@ -77,10 +77,12 @@ for CURRENT_SUBSTRING in ${COMMAND_ARGUMENTS}; do
     fi
 done
 echo Root path $ROOT_PATH
-$(findDrush $ROOT_PATH) 
+
+$(findDrush $ROOT_PATH ) ${args}
 exit
 
-
+#echo $drushDir
+#/bin/sh -x
 #a=`$findDrush ${ROOT_PATH}`
 #$findDrush /data/sites_php82/modular.dev
 #echo $a
@@ -93,7 +95,6 @@ exit
 #$findDrush /data/sites_php82/modular.dev/htdocs
 #exit
 #adfdfd=$($findDrush ${ROOT_PATH})
-
 #echo $adfdfd  dd
 #${adfdfd} $args
 #echo $?
