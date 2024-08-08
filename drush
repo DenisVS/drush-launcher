@@ -78,6 +78,27 @@ for CURRENT_SUBSTRING in ${COMMAND_ARGUMENTS}; do
 done
 echo Root path $ROOT_PATH
 
+
+
+# If no dir provided, use the current directory
+if [ -z "$ROOT_PATH" ]; then
+    ROOT_PATH=$(pwd)
+fi
+
+echo "$ROOT_PATH"  
+
+
+drush=$(findDrush "$ROOT_PATH")
+if [ -z "$drush" ]; then
+    echo "Drush not found in $ROOT_PATH."
+    exit 1
+fi
+
+
+
+drush=$(findDrush "$ROOT_PATH")
+echo AAA drush $drush
+
 $(findDrush $ROOT_PATH ) ${args}
 exit
 
