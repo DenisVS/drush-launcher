@@ -1,8 +1,8 @@
 #!/bin/sh
 
 findDrush() {
-    local path="$1"
-
+    local path=$(pwd)
+#echo path
     # Check if the vendor/bin/drush directory exists in the current directory
     drushDir="$path/vendor/bin/drush"
     if [ -e "$drushDir" ]; then
@@ -30,7 +30,24 @@ findDrush() {
     findDrush "$parentDir"
 }
 
-args=("$@")
+
+#echo VV $(findDrush)
+#echo ddd
+#exit
+
+findDrush="/data/sites_php82/vendor/drush/drush/drush"
+
+#args=("$@")
+args="$*"
+#echo $args dd
+
+#echo GG $drushDir
+$(findDrush) $args
+
+
+
+
+exit
 while [[ $# -gt 0 ]]; do
     case "$1" in
         -r=*|--root=*)
